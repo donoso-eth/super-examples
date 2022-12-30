@@ -9,6 +9,7 @@
         "test": "npx hardhat test",
         "build": "npx hardhat compile",
         "forge-test": "forge test",
+        "fork":"hardhat node --network hardhat",
         "hardhat-test": "hardhat test",
         "coverage": "hardhat coverage",
         "forge-build": "forge build",

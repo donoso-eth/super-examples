@@ -10,6 +10,7 @@ import "@nomiclabs/hardhat-ethers";
 import "solidity-coverage";
 import "hardhat-gas-reporter";
 
+
 try {
     dotenvConfig();
 } catch (error) {
@@ -17,6 +18,10 @@ try {
         "Loading .env file failed. Things will likely fail. You may want to copy .env.template and create a new one.",
     );
 }
+
+
+const INFURA_ID =   process.env.INFURA_ID;
+
 
 // hardhat mixin magic: https://github.com/NomicFoundation/hardhat/issues/2306#issuecomment-1039452928
 // filter out foundry test codes
@@ -40,7 +45,7 @@ task("verifyContract", "Verify a contract")
 
 const config: HardhatUserConfig = {
     solidity: {
-        version: "0.8.13",
+        version: "0.8.17",
         settings: {
             optimizer: {
                 enabled: true,
@@ -53,8 +58,16 @@ const config: HardhatUserConfig = {
             url: "http://0.0.0.0:8545/",
             chainId: 31337,
         },
+        hardhat: {
+            allowUnlimitedContractSize: true,
+            forking: {
+              url: `https://goerli.infura.io/v3/${INFURA_ID}`,
+              blockNumber: 7850256
+              },  
+              chainId: 1337
+          },
         goerli: {
-            url: process.env.PROVIDER_URL || "",
+            url: `https://goerli.infura.io/v3/${INFURA_ID}`,
             chainId: 5,
             accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
         },
