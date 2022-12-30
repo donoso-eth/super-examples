@@ -1,12 +1,14 @@
 
 import { Framework } from "@superfluid-finance/sdk-core";
-import { CloseStreamAddress, getDeployer, SuperToken } from "./Helpers";
+import { CloseStreamAddress, getDeployer, receiver, SuperToken } from "./Helpers";
 import hre, { ethers } from "hardhat";
 
-const authorizeControl = async () => {
+const startStream = async () => {
     try {
      
         let deployer = await getDeployer(hre);
+
+      
 
         console.log("Create Superfluid Framework with SDK-Core");
         const sf = await Framework.create({
@@ -16,15 +18,14 @@ const authorizeControl = async () => {
             provider: ethers.provider,
         });
 
-        // create updateFlowOperatorPermissions for delete operation
-        const op = sf.cfaV1.updateFlowOperatorPermissions({
-            superToken: SuperToken,
+        let flowRate = (ethers.utils.parseEther("100").div(30*24*3600)).toString(); // 100 ethers mont == 38580246913580 per/sec
 
-            // this is the Gelato Ops address for the network you deploy this on:
-            // see https://docs.gelato.network/resources/contract-addresses for a list of addresses
-            flowOperator: CloseStreamAddress,
-            permissions: 4, // delete only
-            flowRateAllowance: "0",
+        // create Flow
+        const op = sf.cfaV1.createFlow({
+            superToken: SuperToken,
+            flowRate:flowRate,
+            receiver: receiver
+                   
         });
 
         console.log(
@@ -36,12 +37,18 @@ const authorizeControl = async () => {
         const receipt = await txn.wait();
 
         console.log("Transaction has been mined.");
-        console.log("Transaction Receipt:", receipt);
+
+        console.log('Getting Flow ....')    
+
+        let flow = await sf.cfaV1.getFlow({sender:deployer.address, receiver, superToken:SuperToken, providerOrSigner:deployer})
+        console.log(flow);
+
+
     } catch (err) {
         console.error(err);
     }
 };
 
 (async () => {
-    await authorizeControl();
+    await startStream();
 })();

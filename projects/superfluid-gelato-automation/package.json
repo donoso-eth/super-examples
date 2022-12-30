@@ -7,21 +7,20 @@
     },
     "scripts": {
         "test": "npx hardhat test",
-        "build": "npx hardhat compile",
+        "build": "hardhat compile",
         "forge-test": "forge test",
         "fork":"hardhat node --network hardhat",
         "hardhat-test": "hardhat test",
         "coverage": "hardhat coverage",
-        "forge-build": "forge build",
-        "hardhat-build": "hardhat compile",
         "console": "hardhat console",
         "hardhat-node": "hardhat node",
         "hardhat-verify": "hardhat verifyContract",
         "deploy": "hardhat run scripts/deploy.ts --network",
-        "run-nodemon-js": "nodemon -e sol,js,ts -i build -x",
-        "run-nodemon-sol": "nodemon -e sol -i build -x",
-        "dev-hardhat": "yarn run-nodemon-js yarn hardhat-test --network localhost",
-        "dev-forge": "yarn run-nodemon-sol yarn forge-test"
+        "startStream": "hardhat run scripts/startStream.ts --network",
+        "stopStream": "hardhat run scripts/stopStream.ts --network",
+        "authorizeControl": "hardhat run scripts/authorizeControl.ts --network",
+        "createTaskStopStream":"hardhat run scripts/createTaskStopStream.ts --network"
+   
     },
     "repository": {
         "type": "git",
