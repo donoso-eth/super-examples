@@ -18,7 +18,8 @@ contract CloseStream is OpsReady {
 
     bytes32 taskId;
 
-    constructor(ISuperfluid _host, ISuperToken _superToken ,address _ops) OpsReady(_ops, address(this)){
+    constructor(ISuperfluid _host, ISuperToken _superToken ,address _ops) 
+    OpsReady(_ops, address(this)){
     
     host = _host;
 
@@ -50,7 +51,7 @@ contract CloseStream is OpsReady {
 
     ModuleData memory moduleData = ModuleData(modules, args);
 
-     taskId = IOps(ops).createTask(address(this), execData, moduleData, ETH);
+     taskId = ops.createTask(address(this), execData, moduleData, ETH);
 
      console.logBytes32(taskId);
 
@@ -58,6 +59,9 @@ contract CloseStream is OpsReady {
 
 
     function closeStream(address sender, address receiver) external onlyOps {
+
+    (uint256 fee, address feeToken) = ops.getFeeDetails();
+    _transfer(fee, feeToken);
 
     _cfaLib.deleteFlow(sender, receiver, superToken);
 
